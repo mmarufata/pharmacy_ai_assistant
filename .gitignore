@@ -9,3 +9,22 @@ __pycache__/
 .vscode/
 .idea/
 .DS_Store
+
+# SQLite databases and temporary files
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+
+# Backup and temporary files
+*.bak
+*.backup.*
+*_yedek*
+*.log
+*.tmp
+
+# Additional environment protection
+.env.*
+!.env.example

@@ -1,0 +1,350 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eczane Otomasyonu</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <div class="dashboard">
+
+        <!-- SOL MENÜ -->
+        <aside class="sidebar">
+
+            <div class="logo">
+                <span class="logo-icon">✚</span>
+                <span>Eczane<span class="logo-light">AI</span></span>
+            </div>
+
+            <nav class="menu">
+
+                <a href="/ai-asistan" class="menu-item">
+                    <span>✦</span>
+                    AI Asistan
+                </a>
+
+                <a href="#" class="menu-item active">
+                    <span>▦</span>
+                    Dashboard
+                </a>
+
+                <a href="#" class="menu-item">
+                    <span>▤</span>
+                    Satış
+                </a>
+
+                <a href="#" class="menu-item">
+                    <span>▣</span>
+                    Ürünler
+                </a>
+
+                <a href="#" class="menu-item">
+                    <span>♙</span>
+                    Müşteriler
+                </a>
+
+                <a href="#" class="menu-item">
+                    <span>▥</span>
+                    Analiz
+                </a>
+
+                <a href="#" class="menu-item">
+                    <span>⚙</span>
+                    Ayarlar
+                </a>
+
+            </nav>
+
+            <div class="sidebar-bottom">
+                <div class="help-card">
+                    <div class="help-icon">✚</div>
+                    <h4>Eczane Yönetimi</h4>
+                    <p>Satış ve stok işlemlerinizi kolayca yönetin.</p>
+                </div>
+            </div>
+
+        </aside>
+
+
+        <!-- ANA İÇERİK -->
+        <main class="main-content">
+
+            <!-- ÜST BAŞLIK -->
+            <header class="topbar">
+
+                <div class="welcome">
+                    <h2>Eczane Dashboard</h2>
+                </div>
+
+                <div class="topbar-right">
+
+                    <div class="search-box">
+                        <span>⌕</span>
+                        <input type="text" id="globalProductSearch" name="globalProductSearch" autocomplete="off" placeholder="İlaç veya ürün ara...">
+                    </div>
+
+                    <button class="notification">♧</button>
+
+                    <div class="profile">
+                        <div class="profile-avatar">E</div>
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <div id="criticalStockWarning" class="critical-stock-warning"></div>
+
+            <!-- AI ECZANE ASİSTANI -->
+
+            <!-- DASHBOARD AI ASİSTAN KARTI -->
+
+            <!-- DASHBOARD AI ASİSTAN KARTI -->
+            <section id="dashboardAICard" class="dashboard-ai-banner" hidden>
+
+                <div class="dashboard-ai-header">
+                    <div class="dashboard-ai-symbol">✦</div>
+
+                    <div class="dashboard-ai-heading">
+                        <span class="dashboard-ai-label">
+                            AKILLI ECZANE YÖNETİMİ
+                        </span>
+                        <h2>AI Eczane Asistanı</h2>
+                    </div>
+
+                    <span class="dashboard-ai-tag">AI Asistan</span>
+                </div>
+
+                <p class="dashboard-ai-description">
+                    Stok durumunuzu analiz edin, satış verilerinizi
+                    değerlendirin ve eczane yönetimini kolaylaştırın.
+                </p>
+
+                <div class="dashboard-ai-features">
+                    <div class="dashboard-ai-feature">
+                        <span class="dashboard-ai-feature-icon">▣</span>
+                        <div>
+                            <strong>Stok Analizi</strong>
+                            <small>Kritik ürünleri takip edin</small>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-ai-feature">
+                        <span class="dashboard-ai-feature-icon">▥</span>
+                        <div>
+                            <strong>Satış Analizi</strong>
+                            <small>Satış verilerini inceleyin</small>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" id="dashboardAIButton">
+                    AI Asistanına Git →
+                </button>
+
+            </section>
+            <section class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-icon green">₺</div>
+                    <p class="stat-label">TOPLAM SATIŞ</p>
+                    <h2 id="dashboardTotalSales">₺0,00</h2>
+                    <span class="stat-change" id="dashboardSalesChange">
+                        Gerçek satış verisi
+                    </span>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon blue">▣</div>
+                    <p class="stat-label">TOPLAM ÜRÜN</p>
+                    <h2 id="totalProductsCount">0</h2>
+                    <span class="stat-change">Kayıtlı ürün sayısı</span>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon orange">⚠</div>
+                    <p class="stat-label">KRİTİK STOK</p>
+                    <h2 id="criticalStockCount">0</h2>
+                    <span class="stat-warning">Stok kontrolü gerekli</span>
+                </div>
+
+                <!-- SKT GECMIS -->
+                <div class="stat-card">
+                    <div class="stat-icon orange">!</div>
+                    <p class="stat-label">SKT GEÇMİŞ</p>
+                    <h2 id="dashboardExpiredCount">0</h2>
+                    <span class="stat-warning">Son kullanma tarihi geçmiş ürünler</span>
+                </div>
+
+                <!-- SKT YAKLASIYOR -->
+                <div class="stat-card">
+                    <div class="stat-icon orange">!</div>
+                    <p class="stat-label">SKT YAKLAŞIYOR</p>
+                    <h2 id="dashboardWarningCount">0</h2>
+
+                    <span class="stat-warning" id="dashboardExpiryWarningText">
+                        30 gün içinde SKT dolacak ürünler
+                    </span>
+
+                </div>
+
+                <!-- SKT UYGUN -->
+                <div class="stat-card">
+                    <div class="stat-icon green">✓</div>
+                    <p class="stat-label">SKT UYGUN</p>
+                    <h2 id="dashboardSafeCount">0</h2>
+                    <span class="stat-change">Son kullanma tarihi uygun ürünler</span>
+                </div>
+
+            </section>
+
+
+            <!-- GRAFİK VE SAĞ PANEL -->
+            <section class="content-grid">
+
+                <div class="sales-panel">
+
+                    <div class="panel-header">
+                        <div>
+                            <h3>Satış Raporu</h3>
+                            <p>Aylık satış performansı</p>
+                        </div>
+
+
+                        <select id="salesPeriodSelect">
+                            <option value="year">Bu Yıl</option>
+                            <option value="month">Bu Ay</option>
+                        </select>
+
+                    </div>
+
+                    <div class="sales-total">
+                        <h2 id="salesReportTotal">₺0,00</h2>
+                        <span>
+                            Ortalama aylık satış
+                            <strong id="salesReportMonthlyAverage">₺0,00</strong>
+                        </span>
+                    </div>
+
+                    <!-- Grafik alanını CSS ile oluşturacağız -->
+
+                    <!-- Gerçek satış grafiği -->
+                    <div class="chart" id="salesChart">
+                        <!-- Grafik JavaScript ile oluşturulacak -->
+                    </div>
+
+                </div>
+
+
+                <div class="right-panels">
+
+                    <!-- STOK DURUMU -->
+                    <div class="panel inventory-panel">
+
+                        <div class="panel-header">
+                            <h3>Stok Durumu</h3>
+                            <span class="small-label">Bu Ay</span>
+                        </div>
+
+                        <div class="inventory-chart">
+                            <div class="donut">
+                                <div class="donut-center">
+                                    <h2 id="inventoryTotalCount">0</h2>
+                                    <p>Toplam Ürün</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="inventory-legend">
+                            <p><span class="dot green-dot"></span> Stokta <b id="inStockCount">0</b></p>
+                            <p><span class="dot blue-dot"></span> Azalan Stok <b id="lowStockCount">0</b></p>
+                            <p><span class="dot orange-dot"></span> Kritik Stok <b id="inventoryCriticalCount">0</b></p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- SATIŞ ÖZETİ -->
+                    <div class="panel summary-panel">
+
+                        <div class="panel-header">
+                            <h3>Satış Özeti</h3>
+                        </div>
+
+
+                        <div class="summary-items">
+                            <div>
+                                <p>Bugünkü Satış</p>
+                                <h3 id="todaySalesTotal">₺0,00</h3>
+                            </div>
+
+                            <div>
+                                <p>Geçen Hafta</p>
+                                <h3 id="lastWeekSalesTotal">₺0,00</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- SON SATIŞLAR -->
+            <section class="panel orders-panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <h3>Son Satışlar</h3>
+                        <p>Son gerçekleştirilen satış işlemleri</p>
+                    </div>
+
+                    <button class="view-all">Tüm Satışlar →</button>
+
+                </div>
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>ÜRÜN ADI</th>
+                                <th>BARKOD</th>
+                                <th>MİKTAR</th>
+                                <th>TOPLAM</th>
+                                <th>TARİH</th>
+                                <th>DURUM</th>
+                            </tr>
+                        </thead>
+
+
+                        <tbody id="dashboardRecentSales">
+                            <tr>
+                                <td colspan="6">Satış kayıtları yükleniyor...</td>
+                            </tr>
+                        </tbody>
+
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+    <script src="{{ url_for('static', filename='js/app.js') }}?v=3"></script>
+</body>
+
+</html>
