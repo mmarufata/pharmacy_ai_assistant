@@ -1,0 +1,69 @@
+# Veritabanı: PostgreSQL. Yalnızca SELECT yazın. Tablo adlarını şema öneki olmadan kullanın.
+# Tutarlar TL. Satış analizlerinde varsayılan filtre: sales.status = 'completed'.
+
+TABLE products  -- Eczanedeki ürünler ve güncel stok bilgisi.
+  product_id INT  -- Ürün kimliği
+  name TEXT  -- Ürün adı
+  barcode TEXT  -- Barkod (metin)
+  category TEXT  -- Ürün kategorisi
+  stock_quantity INT  -- Mevcut stok adedi
+  min_stock_level INT  -- Kritik stok eşiği; stok bunun altındaysa ürün kritiktir
+  price DECIMAL  -- Güncel satış fiyatı (TL)
+  expiry_date DATE  -- Son kullanma tarihi (boş olabilir)
+  supplier_id INT  -- Tedarikçi kimliği -> suppliers.supplier_id
+
+TABLE suppliers  -- Ürün tedarikçileri ve iletişim telefonu.
+  supplier_id INT  -- Tedarikçi kimliği
+  name TEXT  -- Tedarikçi adı
+  phone TEXT  -- Telefon numarası
+
+TABLE sales  -- Satış işlemleri (fiş başlığı). Müşteri bilgisi bilinçli olarak yoktur.
+  sale_id INT  -- Satış kimliği
+  sale_date TIMESTAMP  -- Satış tarihi ve saati
+  total_amount DECIMAL  -- Satışın toplam tutarı (TL)
+  status TEXT  -- Durum: completed (tamamlandı), cancelled (iptal), refunded (iade)
+
+TABLE sale_items  -- Her satıştaki ürün kalemleri.
+  sale_item_id INT  -- Kalem kimliği
+  sale_id INT  -- Satış kimliği -> sales.sale_id
+  product_id INT  -- Ürün kimliği -> products.product_id
+  quantity INT  -- Satılan adet
+  unit_price DECIMAL  -- Satış anındaki birim fiyat (TL)
+  line_total DECIMAL  -- Kalem toplamı = quantity * unit_price (TL)
+
+TABLE payments  -- Satışın ödeme yöntemi. Her satışın tam olarak bir ödemesi vardır; ödeme tutarı sales.total_amount'tır.
+  payment_id INT  -- Ödeme kimliği
+  payment_method TEXT  -- Ödeme yöntemi: cash (nakit), credit_card (kredi kartı), other (diğer)
+  sale_id INT  -- Satış kimliği -> sales.sale_id (benzersiz)
+
+TABLE stock_movements  -- Stok giriş/çıkış hareketleri. quantity işaretlidir: giriş +, çıkış -.
+  movement_id INT  -- Hareket kimliği
+  product_id INT  -- Ürün kimliği -> products.product_id
+  movement_type TEXT  -- Tür: stock_in (giriş), sale (satış), return (iade), waste (fire), count_adjustment (sayım düzeltmesi)
+  quantity INT  -- Adet (giriş +, çıkış -)
+  movement_date TIMESTAMP  -- Hareket tarihi ve saati
+
+TABLE prescriptions  -- Reçete başlıkları. Hasta ve kullanıcı bilgisi bilinçli olarak yoktur.
+  prescription_id INT  -- Reçete kimliği
+  prescription_status TEXT  -- Durum: pending, completed, cancelled
+  sgk_status TEXT  -- sgk_covered (SGK kapsamında) veya private (özel)
+  prescription_date DATE  -- Reçete tarihi
+
+TABLE prescription_items  -- Reçete kalemleri ve SGK / hasta katkı payı tutarları (sentetik prototip verisi).
+  prescription_item_id INT  -- Kalem kimliği
+  prescription_id INT  -- Reçete kimliği -> prescriptions.prescription_id
+  product_id INT  -- Ürün kimliği -> products.product_id
+  quantity INT  -- Adet
+  unit_price DECIMAL  -- Birim fiyat (TL)
+  sgk_covered_amount DECIMAL  -- SGK'nın karşıladığı tutar (TL)
+  patient_copay DECIMAL  -- Hasta katkı payı (TL)
+  price_difference DECIMAL  -- Fiyat farkı (TL)
+
+# İLİŞKİLER (JOIN anahtarları)
+products.supplier_id -> suppliers.supplier_id
+sale_items.sale_id -> sales.sale_id
+sale_items.product_id -> products.product_id
+payments.sale_id -> sales.sale_id   (1 satış = tam 1 ödeme)
+stock_movements.product_id -> products.product_id
+prescription_items.prescription_id -> prescriptions.prescription_id
+prescription_items.product_id -> products.product_id
