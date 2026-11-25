@@ -1,0 +1,9 @@
+# Sürümler bilerek sabitlenmiştir. Rastgele yükseltmeyin.
+# MCP SDK 2.x'te FastMCP -> MCPServer olarak yeniden adlandırıldı ve API değişti; bu yüzden 1.x'e sabit.
+mcp==1.30.0
+SQLAlchemy==2.0.57
+psycopg[binary]==3.3.9
+sqlglot==30.32.0
+python-dotenv==1.2.4
+Werkzeug==3.1.9
+pytest==9.2.0
